@@ -98,7 +98,7 @@ void ndn_lite_init() {
 	ndn_forwarder_fib_insert(_name, &_face->intf, 0);     \
     }
 
-#define NDN_REGISTER_PREFIX(prefix, _string, _cb) {			\
+#define NDN_REGISTER_PREFIX(_prefix, _string, _cb) {			\
 	ndn_name_from_string(_prefix, _string, strlen(_string));\
 	ndn_direct_face_register_prefix(_prefix, _cb);		 \
     }
