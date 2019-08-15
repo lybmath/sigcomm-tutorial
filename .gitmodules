@@ -1,0 +1,3 @@
+[submodule "nrf52840_ndn_lite_android"]
+	path = nrf52840_ndn_lite_android
+	url = git@github.com:ZoharAndroid/nrf52840_ndn_lite_android.git
