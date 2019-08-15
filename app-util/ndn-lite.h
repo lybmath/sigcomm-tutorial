@@ -36,7 +36,6 @@ void APP_LOG_HEX(const char *msg, const uint8_t *buf, size_t buf_len) {
 ndn_direct_face_t *m_face;
 uint16_t m_face_id_direct = 2;
 uint16_t m_face_id_ble = 3;
-ndn_nrf_ble_face_t *m_ndn_nrf_ble_face;
 
 // Callback for when sign on has completed.
 void m_on_sign_on_completed_callback(int result_code) {

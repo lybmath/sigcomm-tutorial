@@ -1,8 +1,14 @@
 #include "app-util/device.h"
-#include "app-util/ll-ndn-lite.h"
-#include "app-util/ll-nrf.h"
+#include "app-util/ndn-lite.h"
+#include "app-util/nrf.h"
 
-static uint8_t trust_controller_only = 0;
+/**
+ * the handler for the command of changing a board's trust policy
+ * this command can only be issued by the controller
+ */
+#define TRUST_CONTROLLER_ONLY 1
+#define TRUST_ALL_NODE 0
+static uint8_t trust_flag = TRUST_ALL_NODE;
 
 int on_policy_command(const uint8_t *interest, uint32_t interest_size)
 {
@@ -10,28 +16,32 @@ int on_policy_command(const uint8_t *interest, uint32_t interest_size)
   ndn_interest_t decoded_interest;
   int ret = ndn_interest_from_block(&decoded_interest, interest, interest_size);
 
-  if (ndn_validate_command(&decoded_interest, CMD_CHANGE_POLICY, trust_controller_only)) {
+  if (ndn_validate_command(&decoded_interest, CMD_CHANGE_POLICY, TRUST_CONTROLLER_ONLY)) {
       char ops[2][128] = {"/ControllerOnly", "/AllNode"};
       int op = ndn_determine_command_operation(&decoded_interest, CMD_CHANGE_POLICY, ops, 2);
       if (op == 1) {
-	  trust_controller_only = 1;
-	  blink_led(4);      
+	  trust_flag = TRUST_CONTROLLER_ONLY;
+	  blink_led(4); off_led(4);   
       } else if (op == 2) {
-	  trust_controller_only = 0;
-	  blink_led(4);
+	  trust_flag = TRUST_ALL_NODE;
+	  blink_led(4); off_led(4);
       }
   }
 
   return ret;
 }
 
+/**
+ * the handler for the command of operating a board's LED 
+ * this command can be issued by either the controller or other boards
+ */
 int on_led_command(const uint8_t *interest, uint32_t interest_size)
 {
   APP_LOG("Get on_led_command... Start to decode received Interest\n");
   ndn_interest_t decoded_interest;
   int ret = ndn_interest_from_block(&decoded_interest, interest, interest_size);
   
-  if (ndn_validate_command(&decoded_interest, CMD_LED, trust_controller_only)) {
+  if (ndn_validate_command(&decoded_interest, CMD_LED, trust_flag)) {
       char ops[][MAX_COMMAND_STR_LEN] = {"/LED/BLINK", "/LED/ON", "/LED/OFF"};
       int op = ndn_determine_command_operation(&decoded_interest, CMD_LED, ops, 3);
       APP_LOG("op = %d\n", op);
@@ -51,7 +61,7 @@ int on_led_command(const uint8_t *interest, uint32_t interest_size)
 // timeout: blink the led
 int on_interest_timeout_callback(const uint8_t *interest, uint32_t interest_size) {
     APP_LOG("on_timeout_callback");
-    blink_led(2);
+    blink_led(2); off_led(2);
     return 0;
 }
 // data back: do nothing
@@ -72,6 +82,7 @@ int main(void) {
     ndn_name_t led_cmd_name;
 
     // construct a ble face
+    ndn_nrf_ble_face_t *m_ndn_nrf_ble_face;
     NDN_CONSTRUCT_NRF_BLE_FACE(m_ndn_nrf_ble_face);
 
     // consumer section: add routes to push outgoing requests to the ble face
