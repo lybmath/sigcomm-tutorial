@@ -10,7 +10,7 @@
 
 #include "../ndn-lite/security/ndn-lite-sec-utils.h"
 #include "../../ndn-lite/app-support/bootstrapping.h"
-#include "ll-nrf.h"
+#include "nrf.h"
 
 #include <stddef.h>
 #include <stdint.h>
