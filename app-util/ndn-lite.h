@@ -94,13 +94,13 @@ void ndn_lite_init() {
     }
 
 #define NDN_FIB_INSERT(_name, _string, _face) {			\
-	ndn_name_from_string(&_name, _string, strlen(_string));\
-	ndn_forwarder_fib_insert(&_name, &_face->intf, 0);     \
+	ndn_name_from_string(_name, _string, strlen(_string));\
+	ndn_forwarder_fib_insert(_name, &_face->intf, 0);     \
     }
 
-#define NDN_REGISTER_PREFIX(_prefix, _string, _cb) {			\
-	ndn_name_from_string(&_prefix, _string, strlen(_string));\
-	ndn_direct_face_register_prefix(&_prefix, _cb);		 \
+#define NDN_REGISTER_PREFIX(prefix, _string, _cb) {			\
+	ndn_name_from_string(_prefix, _string, strlen(_string));\
+	ndn_direct_face_register_prefix(_prefix, _cb);		 \
     }
 
 #define NDN_MAKE_AND_SEND_COMMAND(_name, _face, _dcb, _tcb) {		\

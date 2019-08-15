@@ -86,12 +86,12 @@ int main(void) {
     NDN_CONSTRUCT_NRF_BLE_FACE(m_ndn_nrf_ble_face);
 
     // consumer section: add routes to push outgoing requests to the ble face
-    NDN_FIB_INSERT(cert_fetch_prefix, "/sign-on/cert", m_ndn_nrf_ble_face);
-    NDN_FIB_INSERT(general_request_prefix, "/NDN-IoT", m_ndn_nrf_ble_face);
+    NDN_FIB_INSERT(&cert_fetch_prefix, "/sign-on/cert", m_ndn_nrf_ble_face);
+    NDN_FIB_INSERT(&general_request_prefix, "/NDN-IoT", m_ndn_nrf_ble_face);
 
     // producer section: add routes to pull incoming requests to the callback function
-    NDN_REGISTER_PREFIX(policy_cmd_name, CMD_CHANGE_POLICY, on_policy_command);
-    NDN_REGISTER_PREFIX(led_cmd_name, CMD_LED, on_led_command);
+    NDN_REGISTER_PREFIX(&policy_cmd_name, CMD_CHANGE_POLICY, on_policy_command);
+    NDN_REGISTER_PREFIX(&led_cmd_name, CMD_LED, on_led_command);
 
     // the main loop: wait for device operations
     for (;;) {
