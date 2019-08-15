@@ -53,13 +53,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "sdk_config.h"
+
 #include "nordic_common.h"
 #include "compiler_abstraction.h"
 #include "sdk_os.h"
 #include "sdk_errors.h"
 #include "app_util.h"
 #include "sdk_macros.h"
+#include "sdk_config.h"
 
 #ifdef __cplusplus
 extern "C" {

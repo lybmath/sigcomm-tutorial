@@ -1,6 +1,6 @@
 #include "device.h"
-#include "../../app-util/ll-ndn-lite.h"
-#include "../../app-util/ll-nrf.h"
+#include "app-util/ll-ndn-lite.h"
+#include "app-util/ll-nrf.h"
 
 static uint8_t trust_controller_only = 0;
 

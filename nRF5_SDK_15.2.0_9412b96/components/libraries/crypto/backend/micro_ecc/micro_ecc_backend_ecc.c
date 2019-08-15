@@ -38,8 +38,9 @@
  *
  */
 
-#include "sdk_config.h"
+
 #include "nordic_common.h"
+#include "sdk_config.h"
 
 #if NRF_MODULE_ENABLED(NRF_CRYPTO) && NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_MICRO_ECC)
 
