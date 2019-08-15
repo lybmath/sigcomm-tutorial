@@ -1,5 +1,5 @@
 <!DOCTYPE CrossStudio_Project_File>
-<solution Name="new_app" target="8" version="2">
+<solution Name="template" target="8" version="2">
   <configuration
     Name="Release"
     c_preprocessor_definitions="NDEBUG"
@@ -11,7 +11,7 @@
   <configuration
     Name="Common"
     linker_section_placement_file="$(ProjectDir)/flash_placement.xml" />
-  <project Name="new_app">
+  <project Name="template">
     <configuration
       Name="Common"
       arm_architecture="v7EM"
