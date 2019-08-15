@@ -40,6 +40,7 @@ ndn_nrf_ble_face_t *m_ndn_nrf_ble_face;
 // Callback for when sign on has completed.
 void m_on_sign_on_completed_callback(int result_code) {
   APP_LOG("in main, m_on_sign_on_completed_callback got called.\n");
+  blink_led(5);
 
   if (result_code == NDN_SUCCESS) {
     APP_LOG("Sign on completed succesfully.\n");
@@ -70,6 +71,7 @@ void m_on_sign_on_completed_callback(int result_code) {
 void ndn_lite_init() {
     ndn_security_init();
 
+    blink_led(3); // start sign-on
   // Initialize the sign on client.
   sign_on_basic_client_nrf_sdk_ble_construct(
       SIGN_ON_BASIC_VARIANT_ECC_256,
