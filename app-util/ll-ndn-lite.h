@@ -139,8 +139,15 @@ int ndn_determine_command_operation(ndn_interest_t* di, const char* prefix,
     return op;
 }
 
-int ndn_validate_command(ndn_interest_t* interest, int trust_controller_only) {
-    return trust_controller_only == 0;
+int ndn_validate_command(ndn_interest_t* interest, const char* prefix,
+			 int trust_controller_only) {
+
+    if (trust_controller_only == 0) return 1;
+    
+    char controller_ops [][MAX_COMMAND_STR_LEN] = {"/LED/ON", "/LED/OFF",
+						   "/ControllerOnly", "/AllNode"};
+    int op = ndn_determine_command_operation(interest, prefix, controller_ops, 4);
+    return op > 0;
 }
 
 #endif

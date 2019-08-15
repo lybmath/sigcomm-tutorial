@@ -10,19 +10,19 @@ int on_policy_command(const uint8_t *interest, uint32_t interest_size)
   ndn_interest_t decoded_interest;
   int ret = ndn_interest_from_block(&decoded_interest, interest, interest_size);
 
-  char ops[2][128] = {"/ControllerOnly", "/AllNode"};
-  int op = ndn_determine_command_operation(&decoded_interest, CMD_CHANGE_POLICY, ops, 2);
+  if (ndn_validate_command(&decoded_interest, CMD_CHANGE_POLICY, trust_controller_only)) {
+      char ops[2][128] = {"/ControllerOnly", "/AllNode"};
+      int op = ndn_determine_command_operation(&decoded_interest, CMD_CHANGE_POLICY, ops, 2);
+      if (op == 1) {
+	  trust_controller_only = 1;
+	  blink_led(4);      
+      } else if (op == 2) {
+	  trust_controller_only = 0;
+	  blink_led(4);
+      }
+  }
 
-  if (op == 1) {
-      APP_LOG("change trust policy to trust the contorller only\n");
-      trust_controller_only = 1;
-      blink_led(4);      
-  }
-  else if (op == 2) {
-      APP_LOG("change the trust policy to trust any node\n");
-      trust_controller_only = 0;
-      blink_led(4);
-  }
+  return ret;
 }
 
 int on_led_command(const uint8_t *interest, uint32_t interest_size)
@@ -30,20 +30,22 @@ int on_led_command(const uint8_t *interest, uint32_t interest_size)
   APP_LOG("Get on_led_command... Start to decode received Interest\n");
   ndn_interest_t decoded_interest;
   int ret = ndn_interest_from_block(&decoded_interest, interest, interest_size);
-
-  char ops[][MAX_COMMAND_STR_LEN] = {"/LED/BLINK", "/LED/ON", "/LED/OFF"};
-  int op = ndn_determine_command_operation(&decoded_interest, CMD_LED, ops, 3);
-  APP_LOG("op = %d\n", op);
+  
+  if (ndn_validate_command(&decoded_interest, CMD_LED, trust_controller_only)) {
+      char ops[][MAX_COMMAND_STR_LEN] = {"/LED/BLINK", "/LED/ON", "/LED/OFF"};
+      int op = ndn_determine_command_operation(&decoded_interest, CMD_LED, ops, 3);
+      APP_LOG("op = %d\n", op);
       
-  if (op == 1 && ndn_validate_command(&decoded_interest, trust_controller_only)) {
-      blink_led(1);
+      if (op == 1) {
+	  blink_led(1);
+      } else if (op == 2) {
+	  on_led(1);
+      } else if (op == 3) {
+	  off_led(1);
+      }
   }
-  else if (op == 2) {
-      on_led(1);
-  }
-  else if (op == 3) {
-      off_led(1);
-  }
+
+  return ret;
 }
 
 // timeout: blink the led
@@ -59,7 +61,7 @@ int on_data_callback(const uint8_t *data, uint32_t data_size) {
 }
 
 int main(void) {
-    // iniltize the system
+    // initialize the system
     nrf_board_init(); // inlcuding crpto sub-system
     ndn_lite_init(); // including security bootstrapping
 
