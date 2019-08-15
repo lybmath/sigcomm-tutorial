@@ -132,6 +132,7 @@ void m_on_recvd_data_callback(const uint8_t *payload, uint32_t payload_len) {
     sign_on_basic_client_nrf_sdk_ble.trust_anchor_cert_p = m_sign_on_basic_client.trust_anchor_cert_p;
     sign_on_basic_client_nrf_sdk_ble.trust_anchor_cert_len = m_sign_on_basic_client.trust_anchor_cert_len;
 
+    m_sign_on_basic_client.status = SIGN_ON_BASIC_CLIENT_GENERATED_FINISH_MESSAGE;
     m_on_sign_on_completed(NDN_SUCCESS);
 
   }
